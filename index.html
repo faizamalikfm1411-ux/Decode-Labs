@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Student Productivity Dashboard — track tasks, study hours, and assignments." />
+  <title>StudyFlow — Student Productivity Dashboard</title>
+
+  <!-- Google Fonts: Montserrat (headings) + Open Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="C:\Users\Adeel\OneDrive\Desktop\files\style.css" />
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <!--
+    Flexbox is used here to align logo, nav links, and
+    hamburger button in a single row, space-between layout.
+  -->
+  <header class="navbar" role="banner">
+    <div class="navbar__container">
+
+      <!-- Logo / Brand -->
+      <a href="#" class="navbar__logo" aria-label="StudyFlow Home">
+        <span class="navbar__logo-icon" aria-hidden="true">📚</span>
+        <span class="navbar__logo-text">StudyFlow</span>
+      </a>
+
+      <!-- Hamburger button — visible on mobile only -->
+      <button
+        class="navbar__hamburger"
+        id="hamburgerBtn"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        aria-controls="navMenu"
+      >
+        <span class="hamburger__bar"></span>
+        <span class="hamburger__bar"></span>
+        <span class="hamburger__bar"></span>
+      </button>
+
+      <!-- Navigation links -->
+      <nav class="navbar__menu" id="navMenu" role="navigation" aria-label="Main navigation">
+        <ul class="navbar__list">
+          <li><a href="#dashboard" class="navbar__link">Dashboard</a></li>
+          <li><a href="#tasks" class="navbar__link">Tasks</a></li>
+          <li><a href="#progress" class="navbar__link">Progress</a></li>
+          <li><a href="#" class="navbar__link navbar__link--cta">Sign In</a></li>
+        </ul>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <main id="main-content">
+
+    <!-- ===================== HERO SECTION ===================== -->
+    <!--
+      A full-width section with a warm gradient background.
+      Flexbox centers the hero content vertically and horizontally.
+    -->
+    <section class="hero" aria-labelledby="heroHeading">
+      <div class="hero__container">
+
+        <div class="hero__badge" aria-hidden="true">✨ Week 22 · May 2026</div>
+
+        <h1 class="hero__heading" id="heroHeading">
+          Good Morning,<br />
+          <span class="hero__name">Alex! 👋</span>
+        </h1>
+
+        <p class="hero__quote">
+          "Success is the sum of small efforts, repeated day in and day out."
+          <cite>— Robert Collier</cite>
+        </p>
+
+        <div class="hero__summary" role="status" aria-live="polite">
+          <span class="hero__pill">🎯 3 tasks due today</span>
+          <span class="hero__pill">📅 2 assignments this week</span>
+          <span class="hero__pill">⏱ 4.5 hrs studied</span>
+        </div>
+
+      </div>
+
+      <!-- Decorative blob shapes (aria-hidden so screen readers skip them) -->
+      <div class="hero__blob hero__blob--1" aria-hidden="true"></div>
+      <div class="hero__blob hero__blob--2" aria-hidden="true"></div>
+    </section>
+
+    <!-- ===================== DASHBOARD CARDS SECTION ===================== -->
+    <!--
+      CSS Grid drives the card layout.
+      Mobile: 1 column. Tablet: 2 columns. Desktop: 4 columns.
+      Each card uses Flexbox internally to stack icon + stat + label.
+    -->
+    <section class="dashboard" id="dashboard" aria-labelledby="dashboardHeading">
+      <div class="section-container">
+
+        <h2 class="section-title" id="dashboardHeading">Your Overview</h2>
+        <p class="section-subtitle">A snapshot of your productivity this week.</p>
+
+        <!-- Grid wrapper for stat cards -->
+        <div class="cards-grid" role="list">
+
+          <!-- Card 1: Tasks Completed -->
+          <article class="card" role="listitem" aria-label="Tasks Completed: 12">
+            <div class="card__icon-wrap card__icon-wrap--mocha" aria-hidden="true">✅</div>
+            <div class="card__body">
+              <span class="card__stat" id="tasksCompletedStat">12</span>
+              <span class="card__label">Tasks Completed</span>
+            </div>
+            <div class="card__trend card__trend--up" aria-label="Up 8% from last week">
+              ↑ 8%
+            </div>
+          </article>
+
+          <!-- Card 2: Upcoming Assignments -->
+          <article class="card" role="listitem" aria-label="Upcoming Assignments: 5">
+            <div class="card__icon-wrap card__icon-wrap--blue" aria-hidden="true">📋</div>
+            <div class="card__body">
+              <span class="card__stat">5</span>
+              <span class="card__label">Upcoming Assignments</span>
+            </div>
+            <div class="card__trend card__trend--neutral" aria-label="Same as last week">
+              → 0%
+            </div>
+          </article>
+
+          <!-- Card 3: Study Hours -->
+          <article class="card" role="listitem" aria-label="Study Hours: 4.5">
+            <div class="card__icon-wrap card__icon-wrap--mocha" aria-hidden="true">⏱</div>
+            <div class="card__body">
+              <span class="card__stat">4.5<small>hrs</small></span>
+              <span class="card__label">Study Hours</span>
+            </div>
+            <div class="card__trend card__trend--up" aria-label="Up 12% from last week">
+              ↑ 12%
+            </div>
+          </article>
+
+          <!-- Card 4: Productivity Score -->
+          <article class="card" role="listitem" aria-label="Productivity Score: 78 out of 100">
+            <div class="card__icon-wrap card__icon-wrap--blue" aria-hidden="true">🏆</div>
+            <div class="card__body">
+              <span class="card__stat">78<small>/100</small></span>
+              <span class="card__label">Productivity Score</span>
+            </div>
+            <div class="card__trend card__trend--up" aria-label="Up 5% from last week">
+              ↑ 5%
+            </div>
+          </article>
+
+        </div><!-- /.cards-grid -->
+      </div>
+    </section>
+
+    <!-- ===================== TASK LIST SECTION ===================== -->
+    <!--
+      JavaScript handles task completion toggling and adding new tasks.
+      Flexbox aligns task checkbox, text, and delete button in each row.
+    -->
+    <section class="tasks" id="tasks" aria-labelledby="tasksHeading">
+      <div class="section-container">
+
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" id="tasksHeading">Task List</h2>
+            <p class="section-subtitle">Click a task to mark it complete.</p>
+          </div>
+          <!-- Add Task Button -->
+          <button class="btn btn--primary" id="addTaskBtn" aria-label="Add a new task">
+            + Add Task
+          </button>
+        </div>
+
+        <!-- Add Task Form (hidden by default, toggled by JS) -->
+        <div class="task-form" id="taskForm" aria-hidden="true" hidden>
+          <input
+            type="text"
+            class="task-form__input"
+            id="taskInput"
+            placeholder="Enter task description…"
+            aria-label="New task description"
+            maxlength="120"
+          />
+          <div class="task-form__actions">
+            <button class="btn btn--primary btn--sm" id="saveTaskBtn">Save Task</button>
+            <button class="btn btn--ghost btn--sm" id="cancelTaskBtn">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Task List -->
+        <ul class="task-list" id="taskList" aria-label="Task list" role="list">
+
+          <li class="task-item" role="listitem">
+            <button
+              class="task-item__toggle"
+              aria-pressed="false"
+              aria-label="Mark task complete: Review Chapter 5 — Organic Chemistry"
+            >
+              <span class="task-item__checkbox" aria-hidden="true"></span>
+            </button>
+            <span class="task-item__text">Review Chapter 5 — Organic Chemistry</span>
+            <span class="task-item__due">Due: Today</span>
+            <button class="task-item__delete" aria-label="Delete task: Review Chapter 5">✕</button>
+          </li>
+
+          <li class="task-item" role="listitem">
+            <button
+              class="task-item__toggle"
+              aria-pressed="false"
+              aria-label="Mark task complete: Submit Math Assignment"
+            >
+              <span class="task-item__checkbox" aria-hidden="true"></span>
+            </button>
+            <span class="task-item__text">Submit Math Assignment</span>
+            <span class="task-item__due">Due: Tomorrow</span>
+            <button class="task-item__delete" aria-label="Delete task: Submit Math Assignment">✕</button>
+          </li>
+
+          <li class="task-item task-item--done" role="listitem">
+            <button
+              class="task-item__toggle"
+              aria-pressed="true"
+              aria-label="Mark task incomplete: Read 20 pages of History"
+            >
+              <span class="task-item__checkbox" aria-hidden="true"></span>
+            </button>
+            <span class="task-item__text">Read 20 pages of History</span>
+            <span class="task-item__due">Done ✓</span>
+            <button class="task-item__delete" aria-label="Delete task: Read 20 pages of History">✕</button>
+          </li>
+
+          <li class="task-item" role="listitem">
+            <button
+              class="task-item__toggle"
+              aria-pressed="false"
+              aria-label="Mark task complete: Prepare for Physics Quiz"
+            >
+              <span class="task-item__checkbox" aria-hidden="true"></span>
+            </button>
+            <span class="task-item__text">Prepare for Physics Quiz</span>
+            <span class="task-item__due">Due: Friday</span>
+            <button class="task-item__delete" aria-label="Delete task: Prepare for Physics Quiz">✕</button>
+          </li>
+
+          <li class="task-item task-item--done" role="listitem">
+            <button
+              class="task-item__toggle"
+              aria-pressed="true"
+              aria-label="Mark task incomplete: Complete English Essay Draft"
+            >
+              <span class="task-item__checkbox" aria-hidden="true"></span>
+            </button>
+            <span class="task-item__text">Complete English Essay Draft</span>
+            <span class="task-item__due">Done ✓</span>
+            <button class="task-item__delete" aria-label="Delete task: Complete English Essay Draft">✕</button>
+          </li>
+
+        </ul><!-- /#taskList -->
+
+        <!-- Task counter -->
+        <p class="task-counter" id="taskCounter" aria-live="polite"></p>
+
+      </div>
+    </section>
+
+    <!-- ===================== STUDY PROGRESS SECTION ===================== -->
+    <!--
+      Progress bars are built with CSS width transitions, driven by
+      data-progress attributes. JavaScript reads these on load.
+    -->
+    <section class="progress-section" id="progress" aria-labelledby="progressHeading">
+      <div class="section-container">
+
+        <h2 class="section-title" id="progressHeading">Study Progress</h2>
+        <p class="section-subtitle">How each subject is shaping up this week.</p>
+
+        <!-- Progress Grid: 1 col mobile, 2 col desktop -->
+        <div class="progress-grid">
+
+          <article class="progress-card" aria-label="Mathematics progress">
+            <div class="progress-card__header">
+              <span class="progress-card__subject">📐 Mathematics</span>
+              <span class="progress-card__pct" id="mathPct">0%</span>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100" aria-label="Mathematics: 82%">
+              <div class="progress-bar__fill progress-bar__fill--mocha" data-progress="82"></div>
+            </div>
+            <p class="progress-card__note">4.1 hrs · 3 sessions this week</p>
+          </article>
+
+          <article class="progress-card" aria-label="Physics progress">
+            <div class="progress-card__header">
+              <span class="progress-card__subject">⚛️ Physics</span>
+              <span class="progress-card__pct" id="physicsPct">0%</span>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="Physics: 60%">
+              <div class="progress-bar__fill progress-bar__fill--blue" data-progress="60"></div>
+            </div>
+            <p class="progress-card__note">3.0 hrs · 2 sessions this week</p>
+          </article>
+
+          <article class="progress-card" aria-label="Chemistry progress">
+            <div class="progress-card__header">
+              <span class="progress-card__subject">🧪 Chemistry</span>
+              <span class="progress-card__pct" id="chemPct">0%</span>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Chemistry: 45%">
+              <div class="progress-bar__fill progress-bar__fill--mocha" data-progress="45"></div>
+            </div>
+            <p class="progress-card__note">2.25 hrs · 2 sessions this week</p>
+          </article>
+
+          <article class="progress-card" aria-label="English Literature progress">
+            <div class="progress-card__header">
+              <span class="progress-card__subject">📖 English Literature</span>
+              <span class="progress-card__pct" id="engPct">0%</span>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" aria-label="English Literature: 70%">
+              <div class="progress-bar__fill progress-bar__fill--blue" data-progress="70"></div>
+            </div>
+            <p class="progress-card__note">3.5 hrs · 4 sessions this week</p>
+          </article>
+
+          <article class="progress-card" aria-label="History progress">
+            <div class="progress-card__header">
+              <span class="progress-card__subject">🗺️ History</span>
+              <span class="progress-card__pct" id="histPct">0%</span>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100" aria-label="History: 55%">
+              <div class="progress-bar__fill progress-bar__fill--mocha" data-progress="55"></div>
+            </div>
+            <p class="progress-card__note">2.75 hrs · 2 sessions this week</p>
+          </article>
+
+          <article class="progress-card" aria-label="Computer Science progress">
+            <div class="progress-card__header">
+              <span class="progress-card__subject">💻 Computer Science</span>
+              <span class="progress-card__pct" id="csPct">0%</span>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" aria-label="Computer Science: 90%">
+              <div class="progress-bar__fill progress-bar__fill--blue" data-progress="90"></div>
+            </div>
+            <p class="progress-card__note">4.5 hrs · 5 sessions this week</p>
+          </article>
+
+        </div><!-- /.progress-grid -->
+
+        <!-- Weekly goal callout -->
+        <div class="goal-callout" role="status" aria-label="Weekly study goal status">
+          <span class="goal-callout__icon" aria-hidden="true">🎯</span>
+          <div>
+            <strong>Weekly Goal: 20 hrs</strong>
+            <p>You've studied <strong>20.1 hrs</strong> — goal achieved! 🎉</p>
+          </div>
+          <div class="goal-callout__progress" aria-hidden="true">
+            <div class="goal-bar">
+              <div class="goal-bar__fill" data-progress="100"></div>
+            </div>
+            <span>100%</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main><!-- /#main-content -->
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer__container">
+
+      <div class="footer__brand">
+        <span aria-hidden="true">📚</span>
+        <strong>StudyFlow</strong>
+        <p>Your personal productivity companion.</p>
+      </div>
+
+      <nav class="footer__links" aria-label="Footer navigation">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#progress">Progress</a>
+        <a href="#">Help</a>
+      </nav>
+
+      <p class="footer__copy">
+        &copy; 2026 StudyFlow. Built with ❤️ for students everywhere.
+      </p>
+
+    </div>
+  </footer>
+
+  <script src="C:\Users\Adeel\OneDrive\Desktop\files\script.js"></script>
+</body>
+</html>

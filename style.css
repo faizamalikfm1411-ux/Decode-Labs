@@ -1,0 +1,1204 @@
+/*
+  ============================================================
+  StudyFlow — Student Productivity Dashboard
+  style.css
+  ============================================================
+
+  ARCHITECTURE OVERVIEW
+  ─────────────────────
+  1. CSS Custom Properties (design tokens)
+  2. Reset / Base styles
+  3. Utility classes
+  4. Navbar          — Flexbox for horizontal layout
+  5. Hero            — Flexbox for centering content
+  6. Dashboard Cards — CSS Grid (1 → 2 → 4 columns)
+  7. Task List       — Flexbox per row
+  8. Study Progress  — CSS Grid (1 → 2 columns)
+  9. Footer          — Flexbox
+  10. Animations
+  11. Media Queries   — Tablet (768px), Desktop (1024px)
+
+  LAYOUT PHILOSOPHY
+  ─────────────────
+  • CSS Grid  : page-level section columns & card grids
+  • Flexbox   : within-component alignment (navbar, cards, rows)
+  • All sizing in rem / % / fr / clamp() — no px except borders & shadows
+  ============================================================
+*/
+
+/* ============================================================
+   1. CSS CUSTOM PROPERTIES (design tokens)
+   ============================================================ */
+:root {
+  /* Brand palette */
+  --color-mocha:       #A5856F;   /* Mocha Mousse — warm accent */
+  --color-mocha-dark:  #8a6b58;   /* Darker mocha for hover states */
+  --color-mocha-light: #e8d9cf;   /* Tinted mocha for backgrounds */
+  --color-blue:        #A0D4E0;   /* Ethereal Blue — cool accent */
+  --color-blue-dark:   #7bbfce;   /* Darker blue for hover states */
+  --color-blue-light:  #e0f4f8;   /* Tinted blue for backgrounds */
+  --color-grey:        #F2F0EA;   /* Moonlit Grey — page background */
+  --color-grey-mid:    #e0ddd5;   /* Mid grey for borders */
+  --color-grey-dark:   #706660;   /* Dark grey for secondary text */
+
+  /* Semantic colors */
+  --color-text:        #2c2420;   /* Near-black for headings/body */
+  --color-text-muted:  #706660;   /* Muted body text */
+  --color-bg:          #F2F0EA;   /* Page background */
+  --color-surface:     #ffffff;   /* Card / panel surface */
+  --color-border:      #e0ddd5;   /* Subtle borders */
+  --color-success:     #4caf82;   /* Green for completed states */
+  --color-danger:      #e07070;   /* Red for delete actions */
+
+  /* Typography */
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body:    'Open Sans',  sans-serif;
+
+  /* Spacing scale (rem-based) */
+  --space-xs:  0.25rem;
+  --space-sm:  0.5rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* Border radius */
+  --radius-sm:   0.375rem;
+  --radius-md:   0.75rem;
+  --radius-lg:   1.25rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(44, 36, 32, 0.08);
+  --shadow-md:  0 4px 16px rgba(44, 36, 32, 0.10);
+  --shadow-lg:  0 8px 32px rgba(44, 36, 32, 0.14);
+
+  /* Transitions */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* Navbar height — used for sticky offset */
+  --navbar-height: 4rem;
+}
+
+
+/* ============================================================
+   2. RESET & BASE
+   ============================================================ */
+
+/*
+  A lightweight modern reset. Box-sizing to border-box
+  ensures padding/border don't overflow containers.
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* Smooth anchor scrolling */
+  scroll-behavior: smooth;
+  /* Prevent text size bump on orientation change */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  /* Prevent horizontal overflow on mobile */
+  overflow-x: hidden;
+}
+
+/* Headings use Montserrat */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+/* Lists */
+ul, ol {
+  list-style: none;
+}
+
+/* Images */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Buttons base reset */
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Focus-visible ring for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--color-mocha);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Skip-to-main link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-mocha);
+  color: #fff;
+  border-radius: var(--radius-md);
+  z-index: 9999;
+}
+.skip-link:focus {
+  top: var(--space-md);
+}
+
+
+/* ============================================================
+   3. UTILITY CLASSES
+   ============================================================ */
+
+/* Section wrapper — max-width with side padding */
+.section-container {
+  width: 100%;
+  max-width: 72rem;           /* ~1152px, keeps content readable */
+  margin-inline: auto;        /* horizontal centering */
+  padding-inline: var(--space-lg);
+}
+
+/* Section heading styles */
+.section-title {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-xs);
+}
+
+.section-subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xl);
+}
+
+/* Section header row — title + button side by side */
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-lg);
+}
+.section-header .section-title {
+  margin-bottom: var(--space-xs);
+}
+.section-header .section-subtitle {
+  margin-bottom: 0;
+}
+
+
+/* ============================================================
+   4. BUTTONS
+   ============================================================ */
+
+/*
+  Base button — uses Flexbox to center icon + text.
+  Modified by modifier classes: --primary, --ghost, --sm.
+*/
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-full);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: background var(--transition-fast),
+              color var(--transition-fast),
+              transform var(--transition-fast),
+              box-shadow var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn--primary {
+  background: var(--color-mocha);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(165, 133, 111, 0.35);
+}
+.btn--primary:hover,
+.btn--primary:focus-visible {
+  background: var(--color-mocha-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(165, 133, 111, 0.45);
+}
+.btn--primary:active {
+  transform: translateY(0);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-mocha);
+  border: 1.5px solid var(--color-mocha);
+}
+.btn--ghost:hover,
+.btn--ghost:focus-visible {
+  background: var(--color-mocha-light);
+}
+
+.btn--sm {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+}
+
+
+/* ============================================================
+   5. NAVBAR
+   ============================================================ */
+
+/*
+  Flexbox: logo on the left, hamburger on the right (mobile).
+  On desktop the hamburger is hidden and nav links appear inline.
+*/
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
+  height: var(--navbar-height);
+}
+
+.navbar__container {
+  display: flex;                  /* Flexbox: horizontal row */
+  align-items: center;
+  justify-content: space-between; /* logo ↔ hamburger */
+  height: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: var(--space-lg);
+  position: relative;
+}
+
+/* Logo */
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.125rem;
+  color: var(--color-text);
+  flex-shrink: 0;
+}
+.navbar__logo:hover {
+  color: var(--color-mocha);
+}
+
+.navbar__logo-icon {
+  font-size: 1.375rem;
+  line-height: 1;
+}
+
+/* Hamburger button */
+.navbar__hamburger {
+  display: flex;            /* Flexbox: stack the 3 bars */
+  flex-direction: column;
+  justify-content: space-between;
+  width: 1.75rem;
+  height: 1.25rem;
+  padding: 0;
+  flex-shrink: 0;
+  z-index: 101;
+}
+
+.hamburger__bar {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--color-text);
+  border-radius: var(--radius-full);
+  transition: transform var(--transition-normal),
+              opacity var(--transition-normal);
+}
+
+/* Animate hamburger into X when menu is open */
+.navbar__hamburger[aria-expanded="true"] .hamburger__bar:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+.navbar__hamburger[aria-expanded="true"] .hamburger__bar:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.navbar__hamburger[aria-expanded="true"] .hamburger__bar:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+/* Mobile nav menu — hidden by default, slides down when open */
+.navbar__menu {
+  position: absolute;
+  top: var(--navbar-height);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height var(--transition-slow);
+}
+
+.navbar__menu.is-open {
+  max-height: 20rem;
+}
+
+.navbar__list {
+  display: flex;
+  flex-direction: column; /* Stack links vertically on mobile */
+  padding: var(--space-md) var(--space-lg);
+  gap: var(--space-xs);
+}
+
+.navbar__link {
+  display: block;
+  padding: 0.6rem var(--space-sm);
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.navbar__link:hover,
+.navbar__link:focus-visible {
+  color: var(--color-mocha);
+  background: var(--color-mocha-light);
+}
+
+/* CTA link in nav */
+.navbar__link--cta {
+  color: var(--color-mocha);
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   6. HERO SECTION
+   ============================================================ */
+
+/*
+  Flexbox centers the inner content card.
+  A warm gradient background references the Mocha Mousse palette.
+  Decorative blobs are absolutely positioned behind the content.
+*/
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    #f5ede6 0%,
+    var(--color-grey) 50%,
+    #e6f0f4 100%
+  );
+  padding-block: clamp(3rem, 8vw, 6rem);
+
+  /* Flexbox to center content container */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero__container {
+  position: relative;
+  z-index: 1;             /* Above decorative blobs */
+  text-align: center;
+  max-width: 38rem;
+  padding-inline: var(--space-lg);
+  width: 100%;
+}
+
+.hero__badge {
+  display: inline-block;
+  background: rgba(165, 133, 111, 0.15);
+  color: var(--color-mocha);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(165, 133, 111, 0.25);
+  margin-bottom: var(--space-lg);
+}
+
+.hero__heading {
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: var(--space-md);
+  color: var(--color-text);
+}
+
+.hero__name {
+  color: var(--color-mocha);
+}
+
+.hero__quote {
+  font-size: clamp(0.875rem, 2vw, 1.0625rem);
+  color: var(--color-text-muted);
+  font-style: italic;
+  max-width: 32rem;
+  margin-inline: auto;
+  margin-bottom: var(--space-xl);
+  line-height: 1.7;
+}
+
+.hero__quote cite {
+  display: block;
+  font-style: normal;
+  font-weight: 600;
+  margin-top: var(--space-xs);
+  font-size: 0.8125rem;
+}
+
+/* Pill tags summary row */
+.hero__summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  justify-content: center;
+}
+
+.hero__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.4rem 0.875rem;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Decorative blobs */
+.hero__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.45;
+  pointer-events: none;
+}
+.hero__blob--1 {
+  width: clamp(12rem, 30vw, 22rem);
+  height: clamp(12rem, 30vw, 22rem);
+  background: var(--color-mocha-light);
+  top: -20%;
+  left: -10%;
+}
+.hero__blob--2 {
+  width: clamp(10rem, 25vw, 18rem);
+  height: clamp(10rem, 25vw, 18rem);
+  background: var(--color-blue-light);
+  bottom: -15%;
+  right: -8%;
+}
+
+
+/* ============================================================
+   7. DASHBOARD CARDS — CSS GRID
+   ============================================================ */
+
+/*
+  CSS Grid drives the responsive card layout:
+  Mobile:  1 column
+  Tablet:  2 columns  (media query at 768px)
+  Desktop: 4 columns  (media query at 1024px)
+*/
+.dashboard {
+  padding-block: var(--space-3xl);
+}
+
+/* CSS Grid container */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;   /* Mobile: 1 column */
+  gap: var(--space-lg);
+}
+
+/* Individual card */
+.card {
+  display: flex;                /* Flexbox: icon + body + trend in a row */
+  align-items: center;
+  gap: var(--space-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal),
+              box-shadow var(--transition-normal);
+  /* Animate in on load */
+  opacity: 0;
+  animation: fadeSlideUp 0.5s ease forwards;
+}
+
+/* Stagger the card animations */
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.12s; }
+.card:nth-child(3) { animation-delay: 0.19s; }
+.card:nth-child(4) { animation-delay: 0.26s; }
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Card icon */
+.card__icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-md);
+  font-size: 1.375rem;
+  flex-shrink: 0;
+}
+.card__icon-wrap--mocha { background: var(--color-mocha-light); }
+.card__icon-wrap--blue  { background: var(--color-blue-light);  }
+
+/* Card stat + label */
+.card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0; /* Prevent overflow */
+}
+
+.card__stat {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.card__stat small {
+  font-size: 0.75em;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-left: 2px;
+}
+
+.card__label {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
+  font-weight: 500;
+}
+
+/* Trend badge */
+.card__trend {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  font-family: var(--font-heading);
+}
+.card__trend--up {
+  background: rgba(76, 175, 130, 0.12);
+  color: #2e7d5f;
+}
+.card__trend--neutral {
+  background: rgba(112, 102, 96, 0.1);
+  color: var(--color-text-muted);
+}
+
+
+/* ============================================================
+   8. TASK LIST SECTION
+   ============================================================ */
+
+.tasks {
+  padding-block: var(--space-3xl);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Task form (add task) */
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+  background: var(--color-grey);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md) var(--space-lg);
+}
+
+.task-form__input {
+  width: 100%;
+  padding: 0.625rem var(--space-md);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--color-text);
+  background: #fff;
+  transition: border-color var(--transition-fast),
+              box-shadow var(--transition-fast);
+}
+.task-form__input:focus {
+  outline: none;
+  border-color: var(--color-mocha);
+  box-shadow: 0 0 0 3px rgba(165, 133, 111, 0.2);
+}
+.task-form__input::placeholder {
+  color: #b5aea9;
+}
+
+.task-form__actions {
+  display: flex;          /* Flexbox: buttons side by side */
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+/* The task list */
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Individual task row */
+.task-item {
+  display: flex;          /* Flexbox: checkbox + text + due + delete */
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-grey);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast),
+              border-color var(--transition-fast),
+              transform var(--transition-fast);
+}
+.task-item:hover {
+  background: #f7f4ef;
+  transform: translateX(2px);
+}
+
+/* Completed task */
+.task-item--done {
+  background: rgba(76, 175, 130, 0.06);
+  border-color: rgba(76, 175, 130, 0.3);
+}
+.task-item--done .task-item__text {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+.task-item--done .task-item__checkbox {
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
+.task-item--done .task-item__checkbox::after {
+  opacity: 1;
+}
+
+/* Toggle button (the checkbox hit area) */
+.task-item__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  transition: background var(--transition-fast);
+}
+.task-item__toggle:hover {
+  background: rgba(165, 133, 111, 0.1);
+}
+
+/* Custom checkbox visual */
+.task-item__checkbox {
+  display: block;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  border: 2px solid var(--color-mocha);
+  background: #fff;
+  position: relative;
+  transition: background var(--transition-fast),
+              border-color var(--transition-fast);
+}
+/* Checkmark via pseudo-element */
+.task-item__checkbox::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.3125rem;
+  height: 0.5625rem;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: translate(-60%, -60%) rotate(45deg);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+/* Task text */
+.task-item__text {
+  flex: 1;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color var(--transition-fast);
+}
+
+/* Due date badge */
+.task-item__due {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  font-weight: 500;
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-full);
+  background: rgba(165, 133, 111, 0.1);
+  flex-shrink: 0;
+}
+
+/* Delete button */
+.task-item__delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  transition: background var(--transition-fast),
+              color var(--transition-fast);
+}
+.task-item__delete:hover,
+.task-item__delete:focus-visible {
+  background: rgba(224, 112, 112, 0.15);
+  color: var(--color-danger);
+}
+
+/* Task counter */
+.task-counter {
+  margin-top: var(--space-md);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  text-align: right;
+}
+
+/* Animation for newly added tasks */
+.task-item--new {
+  animation: fadeSlideUp 0.3s ease forwards;
+}
+
+
+/* ============================================================
+   9. STUDY PROGRESS SECTION
+   ============================================================ */
+
+.progress-section {
+  padding-block: var(--space-3xl);
+}
+
+/* CSS Grid — 1 col mobile, 2 col desktop */
+.progress-grid {
+  display: grid;
+  grid-template-columns: 1fr;   /* Mobile: 1 column */
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+/* Progress card */
+.progress-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal),
+              box-shadow var(--transition-normal);
+}
+.progress-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.progress-card__header {
+  display: flex;               /* Flexbox: subject name + percentage */
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-sm);
+}
+
+.progress-card__subject {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--color-text);
+}
+
+.progress-card__pct {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--color-mocha);
+  transition: color var(--transition-fast);
+}
+
+/* Progress bar track */
+.progress-bar {
+  width: 100%;
+  height: 0.5rem;
+  background: var(--color-grey);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--space-sm);
+}
+
+/* Progress bar fill — width driven by data-progress via JS */
+.progress-bar__fill {
+  height: 100%;
+  width: 0%;                   /* JS will animate this to the target */
+  border-radius: var(--radius-full);
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.progress-bar__fill--mocha { background: var(--color-mocha); }
+.progress-bar__fill--blue  {
+  background: linear-gradient(90deg, var(--color-blue), var(--color-blue-dark));
+}
+
+.progress-card__note {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+/* Weekly goal callout banner */
+.goal-callout {
+  display: flex;             /* Flexbox: icon + text + progress bar */
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  background: linear-gradient(
+    135deg,
+    var(--color-mocha-light),
+    var(--color-blue-light)
+  );
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg) var(--space-xl);
+}
+
+.goal-callout__icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.goal-callout > div:nth-child(2) {
+  flex: 1;
+  min-width: 10rem;
+}
+
+.goal-callout strong {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.goal-callout p {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.goal-callout__progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+.goal-bar {
+  width: clamp(5rem, 15vw, 9rem);
+  height: 0.5rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.goal-bar__fill {
+  height: 100%;
+  width: 0%;
+  background: var(--color-mocha);
+  border-radius: var(--radius-full);
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.goal-callout__progress span {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--color-mocha);
+  white-space: nowrap;
+}
+
+
+/* ============================================================
+   10. FOOTER
+   ============================================================ */
+
+.footer {
+  background: var(--color-text);
+  color: rgba(255, 255, 255, 0.85);
+  padding-block: var(--space-2xl);
+}
+
+.footer__container {
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: var(--space-lg);
+  display: flex;              /* Flexbox: brand + links + copy */
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  text-align: center;
+}
+
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.footer__brand span {
+  font-size: 1.5rem;
+}
+
+.footer__brand strong {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  color: #fff;
+}
+
+.footer__brand p {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  justify-content: center;
+}
+
+.footer__links a {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+.footer__links a:hover {
+  color: var(--color-blue);
+}
+
+.footer__copy {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+
+/* ============================================================
+   11. ANIMATIONS (keyframes)
+   ============================================================ */
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ============================================================
+   12. MEDIA QUERIES
+   ============================================================
+
+   STRATEGY — mobile-first:
+   Default styles target mobile (< 768px).
+   We add rules AT each breakpoint to progressively enhance.
+
+   Breakpoints:
+   • 768px  — Tablet
+   • 1024px — Desktop
+   ============================================================ */
+
+
+/* ── TABLET (min-width: 768px) ──────────────────────────── */
+@media (min-width: 768px) {
+
+  /* Navbar: show links inline, hide hamburger */
+  .navbar__hamburger {
+    display: none;              /* Hidden on tablet+ */
+  }
+
+  .navbar__menu {
+    /* Override the slide-down mobile behavior */
+    position: static;
+    max-height: none;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .navbar__list {
+    flex-direction: row;        /* Links horizontal on tablet+ */
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 0;
+  }
+
+  .navbar__link {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  /* Cards: 2-column grid on tablet */
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Progress: 2-column grid on tablet */
+  .progress-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Footer: horizontal layout on tablet */
+  .footer__container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .footer__brand {
+    align-items: flex-start;
+  }
+
+  .footer__copy {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Task form: input + actions in one row */
+  .task-form {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .task-form__input {
+    flex: 1;
+  }
+
+  .task-form__actions {
+    flex-shrink: 0;
+  }
+}
+
+
+/* ── DESKTOP (min-width: 1024px) ────────────────────────── */
+@media (min-width: 1024px) {
+
+  /* Cards: 4-column grid on desktop */
+  .cards-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Larger card padding on desktop */
+  .card {
+    padding: var(--space-xl);
+  }
+
+  /* Progress grid stays at 2 columns but with more spacing */
+  .progress-grid {
+    gap: var(--space-xl);
+  }
+
+  /* Slightly larger nav link font */
+  .navbar__link {
+    font-size: 0.9375rem;
+  }
+
+  /* Task text wrapping allowed on desktop */
+  .task-item__text {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+}
+
+
+/* ── LARGE DESKTOP (min-width: 1280px) ──────────────────── */
+@media (min-width: 1280px) {
+  /* Slightly more generous section padding */
+  .dashboard,
+  .tasks,
+  .progress-section {
+    padding-block: 5rem;
+  }
+}
